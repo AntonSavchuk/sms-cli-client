@@ -1,0 +1,2 @@
+INFO:root:Sent: 12345 -> 67890: Test message
+INFO:root:Server response: 200, {"status":"success","message_id":"123456"}
