@@ -34,10 +34,6 @@ class HTTPClient:
             print("Sending request:")
             print(request.decode()) 
 
-            print(f"Request body (length {len(body)}):")
-            print(body)
-
-
             with socket.create_connection((self.host, self.port)) as sock:
                 sock.sendall(request.split(b"\r\n\r\n")[0] + b"\r\n\r\n")
                 sock.sendall(body_bytes) 
