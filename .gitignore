@@ -16,7 +16,7 @@ logs/
 *.err
 debug.log
 
-config.toml  # Исключаем конфигурацию с учетными данными
+config.toml 
 *.ini
 *.env
 

@@ -11,7 +11,7 @@ def send_sms(args):
     logger.info('SMS sent: %s -> %s: %s', args.sender, args.recipient, args.message)
     logger.info("Server response: %s, %s", response.status_code, response.body)
 
-    print("Server response: %s, %s", response.status_code, response.body)
+    print("Server response: ", response.status_code, response.body)
 
 def main():
     parser = argparse.ArgumentParser(description='CLI for sending SMS')
