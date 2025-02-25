@@ -13,15 +13,32 @@ class HTTPRequest:
 
     @classmethod
     def from_bytes(cls, binary_data: bytes):
-        data = binary_data.decode().split('\r\n')
-        method, url, _ = data[0].split()
-        headers = {}
-        for h in data[1:]:
-            if ": " in h:
-                key, value = h.split(": ", 1) 
-                headers[key] = value
+        try:
+            data = binary_data.decode(errors="ignore").split("\r\n")
 
-        return cls(method, url, headers, data[-1])
+            if not data or len(data[0].split()) < 2:
+                return cls(500, {}, "Invalid response")  # Возвращаем 500, если статус не найден
+
+            status_code = int(data[0].split()[1])
+
+            headers = {}
+            body_index = 1
+            for i, h in enumerate(data[1:], start=1):
+                if h == "":  # Пустая строка отделяет заголовки от тела
+                    body_index = i + 1
+                    break
+                if ": " in h:
+                    key, value = h.split(": ", 1)
+                    headers[key] = value
+
+            body = "\n".join(data[body_index:]) if body_index < len(data) else ""
+
+            return cls(status_code, headers, body)
+
+        except Exception as e:
+            print(f"Ошибка парсинга ответа: {e}")
+            return cls(500, {}, "Invalid response")
+
 
 
 class HTTPResponse:
@@ -37,12 +54,30 @@ class HTTPResponse:
 
     @classmethod
     def from_bytes(cls, binary_data: bytes):
-        data = binary_data.decode().split('\r\n')
-        status_code = int(data[0].split()[1])
-        headers = {}
-        for h in data[1:]:
-            if ": " in h:
-                key, value = h.split(": ", 1) 
-                headers[key] = value
-                
-        return cls(status_code, headers, data[-1])
+        try:
+            data = binary_data.decode(errors="ignore").split("\r\n")
+
+            if not data or len(data[0].split()) < 2:
+                return cls(500, {}, "Invalid response") 
+
+            status_code = int(data[0].split()[1])
+
+            headers = {}
+            body_index = 1
+            for i, h in enumerate(data[1:], start=1):
+                if h == "": 
+                    body_index = i + 1
+                    break
+                if ": " in h:
+                    key, value = h.split(": ", 1)
+                    headers[key] = value
+
+            body = "\n".join(data[body_index:]) if body_index < len(data) else ""
+
+            return cls(status_code, headers, body)
+
+        except Exception as e:
+            print(f"Ошибка парсинга ответа: {e}")
+            return cls(500, {}, "Invalid response")
+
+

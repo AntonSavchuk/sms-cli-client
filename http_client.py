@@ -41,12 +41,12 @@ class HTTPClient:
                 response = sock.recv(4096)
             
             return HTTPResponse.from_bytes(response)
-        except sock.timeout:
+        except socket.timeout:
             print('Error: Server not responding (timeout)')
-            exit(1)
+            raise RuntimeError("Ошибка при выполнении запроса")
         except socket.error as e:
             print('Connection error: %s', e)
-            exit(1)
+            raise RuntimeError("Ошибка при выполнении запроса")
         except Exception as e:
             print('Unexpected error: %s', e)
-            exit(1)
+            raise RuntimeError("Ошибка при выполнении запроса")
